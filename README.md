@@ -58,3 +58,8 @@ EARTH Service, MOON Service, and MARS Service are independent services of the St
 
 The Earth Service requests to fetch weather forecast information from MOON Service.
 In the event of failure of MOON service, the earth will communicate to MARS Service to fetch weather forecast information.
+
+## How does the Circuit Breaker Pattern work here?
+
+When the Earth Service attempts to communicate with the MOON Service, if the MOON Service is unavailable or there is a failure, the Earth Service retries using the retry policy configured in the Earth Service. If there are a specified number of consecutive failures of the MOON Service, the Earth Service will open the circuit (Circuit State Open).
+If requests are made to the MOON Service while it is in recovery mode, the Circuit Breaker policy will not allow the request to pass through until the specified recovery wait time configured in the Circuit Breaker policy has elapsed. Instead, the request will be forwarded to the Fallback Service, which is the MARS Service. Thus, the Circuit Breaker ensures that requests do not pile up on the MOON Service.
